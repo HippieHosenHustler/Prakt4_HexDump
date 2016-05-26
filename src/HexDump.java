@@ -63,7 +63,7 @@ public class HexDump
         // Laenge 2 uebergeben.
         // Als drittes bauen Sie eine Schleife, in der die Bytes aus Data
         // mit getHexByte umgewndelt werden und nacheinander, durch Leerzeichen
-        // getrennt zu dem String zusammen gebaut werden.
+        // getrennt zu dem String zusammen gebaut werden. bla
 
         return s;
     }
