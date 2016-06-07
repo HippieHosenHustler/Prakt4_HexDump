@@ -3,6 +3,7 @@
  */
 import java.lang.*;
 import java.io.*;
+import java.lang.reflect.Array;
 
 public class HexDump
 {
@@ -48,9 +49,10 @@ public class HexDump
        of an array of bytes */
     public String getHexString()
     {
-        int i, line = 0;
+        int i, j, line = 0;
         String s = new String(hexByte(line, 4)) + ": ";
         String temp;
+        String plainText;
 
         String dataString = new String(data);
 
@@ -61,7 +63,13 @@ public class HexDump
             if((i+1) % 16 == 0 && (i+1) != dataString.length()) {
                 line++;
                 temp = new String(hexByte(line, 4));
-                s = s + "\n" + temp + ": ";
+                plainText = "";
+
+                for (j = (i-15); j <= i; j++) {
+                    plainText = plainText + new String(hexByte(data[j], 1));
+                }
+
+                s = s + "\t\t" + plainText + "\n" + temp + ": ";
             }
             else if((i+1) % 4 == 0 && (i+1) != dataString.length()){
                 s = s + " | ";
@@ -69,7 +77,6 @@ public class HexDump
             else{
                 s = s + " ";
             }
-
         }
 
         return s;
