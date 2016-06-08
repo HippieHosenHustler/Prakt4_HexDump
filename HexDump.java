@@ -7,16 +7,13 @@ import java.lang.reflect.Array;
 
 public class HexDump
 {
-
     byte data[];
 
-    HexDump(String s)
-    {
+    HexDump(String s) {
         data=s.getBytes();
     }
 
-    HexDump(InputStream fis)
-    {
+    HexDump(InputStream fis) {
         try
         {
             ByteArrayOutputStream bos=new ByteArrayOutputStream(1024);
@@ -29,10 +26,7 @@ public class HexDump
         }catch(Exception e){System.out.println(e);}
     }
 
-    /* produces a char Array of length len displaying
-       the hexadecimal Value of the value z */
-    private char[] hexByte(int z, int len)
-    {
+    private char[] hexByte(int z, int len) {
         char[] x=new char[len];
         int i,hx;
         for(i=len-1;i>=0;i--)
@@ -45,10 +39,7 @@ public class HexDump
         return x;
     }
 
-    /* produces a String in the Form of a hexdump
-       of an array of bytes */
-    public String getHexString()
-    {
+    public String getHexString() {
         int i, j, line = 0;
         String s = new String(hexByte(line, 4)) + ": ";
         String temp;
@@ -81,13 +72,11 @@ public class HexDump
 
         return s;
     }
-    public static void main(String args[])
-    {
 
-        try
-        {
-            System.out.println(new HexDump(args[0]).getHexString());
-            //System.out.println(new HexDump(new FileInputStream(args[0])).getHexString());
+    public static void main(String args[]) {
+        try {
+            //System.out.println(new HexDump(args[0]).getHexString());
+            System.out.println(new HexDump(new FileInputStream(args[0])).getHexString());
         }catch(Exception e){System.out.println(e);}
     }
 }
