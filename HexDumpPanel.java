@@ -5,10 +5,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -24,16 +21,16 @@ import java.util.List;
  */
 public class HexDumpPanel extends Application {
     public static void main(String[] args) {
-
         //create new URLLoad object, pass the parameters and set the content of the textfile from args[2]
-        //URLLoad urlObject = new URLLoad();
-        //urlObject.setFileText(args[0], args[1]);
+        URLLoad urlObject = new URLLoad();
+        urlObject.setFileText(args[0], args[1]);
 
         //create new URLConnectionLoadButton object, pass parameters and set the content of the textfile from args[2]
-        //URLConnectionLoad urlsConnectionObject = new URLConnectionLoad();
-        //urlsConnectionObject.setFileText(args[0], args[1]);
+        URLConnectionLoad urlsConnectionObject = new URLConnectionLoad();
+        urlsConnectionObject.setFileText(args[0], args[1]);
 
         //create new SocketLoadButton object, pass the parameters and set the content of the textfile from args[2]
+
 
         Application.launch(args);
     }

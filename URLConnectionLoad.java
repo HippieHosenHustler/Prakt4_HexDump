@@ -13,19 +13,19 @@ public class URLConnectionLoad {
             URL url = new URL(urlParameter);
             URLConnection connection = url.openConnection();
             connection.connect();
-            OutputStream outputStream = new FileOutputStream(fileParameter);
+            OutputStream outputStream = new FileOutputStream(fileParameter + "URLConnectionFile.txt");
             InputStream inputStream = connection.getInputStream();
 
             int length;
             byte buffer[] = new byte[128];
 
-            while ((length = inputStream.read(buffer)) !=1)
+            while ((length = inputStream.read(buffer)) >=1)
                 outputStream.write(buffer, 0, length);
 
             outputStream.close();
             inputStream.close();
         }
-        catch(Exception e){
+        catch (Exception e){
             System.out.println(e);
             System.exit(1);
         }
