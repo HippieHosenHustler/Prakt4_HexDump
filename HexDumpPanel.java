@@ -15,6 +15,8 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.util.List;
+
 /**
  * Created by Tom on 07.06.2016.
  */
@@ -23,11 +25,20 @@ public class HexDumpPanel extends Application {
         Application.launch(args);
     }
 
+    byte data[];
+
     @Override
     public void start(Stage primaryStage) {
 
+        //pass parameters to JavaFx Application via "parameterArray"
         Parameters parameters = getParameters();
+        List<String> rawParameters = parameters.getRaw();
+        String [] parameterArray = rawParameters.toArray(new String[rawParameters.size()]);
 
+        //pass bytes from parameters to data
+        data = parameterArray[0].getBytes();
+
+        //set the stage
         primaryStage.setTitle("HexDump");
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
@@ -35,7 +46,7 @@ public class HexDumpPanel extends Application {
         grid.setVgap(15);
         grid.setPadding(new Insets(25, 25, 25, 25));
 
-        //Content of the panel
+        //content of the panel
         Text sceneTitle = new Text("What type of input?");
         sceneTitle.setFont(Font.font("Arial", FontWeight.NORMAL, 20));
         grid.add(sceneTitle, 0, 0, 2, 1);
@@ -53,14 +64,14 @@ public class HexDumpPanel extends Application {
         grid.add(hbButton, 0, 2, 2, 1);
 
         final Text actionTarget = new Text();
-        grid.add(actionTarget, 0, 3, 2, 1);
+        grid.add(actionTarget, 0, 3, 3, 1);
 
-        //Events
+        //events
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 actionTarget.setFill(Color.CRIMSON);
-                actionTarget.setText("something");
+                actionTarget.setText(parameterArray[0]);
 
             }
         });
@@ -69,8 +80,6 @@ public class HexDumpPanel extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
-
-    byte data[];
 
     private char[] hexByte(int z, int len) {
         char[] x = new char[len];
