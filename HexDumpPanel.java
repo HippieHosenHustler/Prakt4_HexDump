@@ -66,12 +66,36 @@ public class HexDumpPanel extends Application {
         final Text actionTarget = new Text();
         grid.add(actionTarget, 0, 3, 3, 1);
 
+        //create hexString
+        int i, j, line = 0;
+        String s = new String(hexByte(line, 4)) + ": ";
+        String temp;
+        String dataString = new String(data);
+
+        for (i = 0; i < dataString.length(); i++) {
+            temp = new String(hexByte(data[i], 2));
+            s = s + temp;
+
+            if ((i + 1) % 16 == 0 && (i + 1) != dataString.length()) {
+                line++;
+                temp = new String(hexByte(line, 4));
+                s = s + "\n" + temp + ": ";
+            } else if ((i + 1) % 4 == 0 && (i + 1) != dataString.length()) {
+                s = s + " | ";
+            } else {
+                s = s + " ";
+            }
+        }
+
+        //test output
+        System.out.println(s);
+
         //events
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 actionTarget.setFill(Color.CRIMSON);
-                actionTarget.setText(parameterArray[0]);
+                actionTarget.setText("");
 
             }
         });
@@ -93,6 +117,7 @@ public class HexDumpPanel extends Application {
         return x;
     }
 
+    /*
     public void getHexString() {
         int i, j, line = 0;
         String s = new String(hexByte(line, 4)) + ": ";
@@ -121,5 +146,5 @@ public class HexDumpPanel extends Application {
                 s = s + " ";
             }
         }
-    }
+    }*/
 }
