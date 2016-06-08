@@ -68,7 +68,7 @@ public class HexDumpPanel extends Application {
 
         //create hexString
         int i, j, line = 0;
-        String s = new String(hexByte(line, 4)) + ": ";
+        String s = new String(hexByte(line, 4)) + ":\t";
         String temp;
         String dataString = new String(data);
 
@@ -79,23 +79,23 @@ public class HexDumpPanel extends Application {
             if ((i + 1) % 16 == 0 && (i + 1) != dataString.length()) {
                 line++;
                 temp = new String(hexByte(line, 4));
-                s = s + "\n" + temp + ": ";
+                s = s + "\n" + temp + ":\t";
             } else if ((i + 1) % 4 == 0 && (i + 1) != dataString.length()) {
-                s = s + " | ";
+                s = s + "\t  |\t";
             } else {
-                s = s + " ";
+                s = s + "\t";
             }
         }
 
         //test output
-        System.out.println(s);
+        final String hexDumpString = s;
 
         //events
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 actionTarget.setFill(Color.CRIMSON);
-                actionTarget.setText("");
+                actionTarget.setText(hexDumpString);
 
             }
         });
