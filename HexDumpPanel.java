@@ -38,7 +38,7 @@ public class HexDumpPanel extends Application {
             //pass bytes from parameters to data if 1 parameter is present
             data = parameterArray[0].getBytes();
         }
-        else if(parameterArray.length == 2){
+        else if(parameterArray.length == 2 || parameterArray.length == 3){
             //pass bytes from file to data if exactly 2 parameters are present with 0 being the URL and 1 being the destination file
             try
             {
@@ -150,6 +150,8 @@ public class HexDumpPanel extends Application {
         buttonSocket.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                SocketLoad socketObject = new SocketLoad();
+                socketObject.setFileText(parameterArray[0], parameterArray[1], parameterArray[2]);
 
                 hexDumpTitle.setText("HexDump via Socket");
 
