@@ -9,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -25,12 +26,14 @@ public class HexDumpPanel extends Application {
     public static void main(String[] args) {
 
         //create new URLLoad object, pass the parameters and set the content of the textfile from args[2]
-        URLLoad urlObject = new URLLoad();
-        urlObject.setFileText(args[0], args[1]);
+        //URLLoad urlObject = new URLLoad();
+        //urlObject.setFileText(args[0], args[1]);
 
-        //create new URLConnectionLoad object, pass parameters and set the content of the textfile from args[2]
-        URLConnectionLoad urlsConnectionObject = new URLConnectionLoad();
-        urlsConnectionObject.setFileText(args[0], args[1]);
+        //create new URLConnectionLoadButton object, pass parameters and set the content of the textfile from args[2]
+        //URLConnectionLoad urlsConnectionObject = new URLConnectionLoad();
+        //urlsConnectionObject.setFileText(args[0], args[1]);
+
+        //create new SocketLoadButton object, pass the parameters and set the content of the textfile from args[2]
 
         Application.launch(args);
     }
@@ -82,22 +85,24 @@ public class HexDumpPanel extends Application {
         //content of the panel
         Text sceneTitle = new Text("What type of input?");
         sceneTitle.setFont(Font.font("Arial", FontWeight.NORMAL, 20));
-        grid.add(sceneTitle, 0, 0, 2, 1);
+        grid.add(sceneTitle, 0, 0, 1, 1);
 
-        Label inputType = new Label("Type:");
-        grid.add(inputType, 0, 1);
+        Button buttonUrl = new Button("URL");
+        Button buttonUrlConnection = new Button("URLConnection");
+        Button buttonSocket = new Button("Socket");
 
-        TextField inputTextField = new TextField();
-        grid.add(inputTextField, 1, 1);
+        buttonUrl.setMaxWidth(Double.MAX_VALUE);
+        buttonUrlConnection.setMaxWidth(Double.MAX_VALUE);
+        buttonSocket.setMaxWidth(Double.MAX_VALUE);
 
-        Button button = new Button("generate Hexdump");
-        HBox hbButton = new HBox(0);
-        hbButton.setAlignment(Pos.BASELINE_CENTER);
-        hbButton.getChildren().add(button);
-        grid.add(hbButton, 0, 2, 2, 1);
+        VBox vbButtons = new VBox();
+        vbButtons.setAlignment(Pos.BASELINE_CENTER);
+        vbButtons.setSpacing(10);
+        vbButtons.getChildren().addAll(buttonUrl, buttonUrlConnection, buttonSocket);
+        grid.add(vbButtons, 0, 1, 1, 1);
 
         final Text actionTarget = new Text();
-        grid.add(actionTarget, 0, 3, 3, 1);
+        grid.add(actionTarget, 0, 4, 2, 1);
 
         //create hexString
         int i, j, line = 0;
@@ -124,7 +129,7 @@ public class HexDumpPanel extends Application {
         final String hexDumpString = s;
 
         //events
-        button.setOnAction(new EventHandler<ActionEvent>() {
+        buttonUrl.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 actionTarget.setFill(Color.CRIMSON);
