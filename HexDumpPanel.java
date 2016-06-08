@@ -38,6 +38,7 @@ public class HexDumpPanel extends Application {
         if(parameterArray.length == 1){
             //pass bytes from parameters to data if 1 parameter is present
             data = parameterArray[0].getBytes();
+            char[] plainText = new char[parameterArray[0].length()];
         }
         else if(parameterArray.length == 2 || parameterArray.length == 3){
             //pass bytes from file to data if exactly 2 parameters are present with 0 being the URL and 1 being the destination file
@@ -51,6 +52,9 @@ public class HexDumpPanel extends Application {
                 while ((lenr=inputFile.read(buf))>-1) bos.write(buf,0,lenr);
 
                 data=bos.toByteArray();
+
+                BufferedReader reader = new BufferedReader(new FileReader(parameterArray[1]));
+                //char[] plainText = new char[length of string from file goes here];
             }
             catch(Exception e) {
                 System.out.println(e);
@@ -101,12 +105,11 @@ public class HexDumpPanel extends Application {
         vbActionTarget.getChildren().add(hexDumpTitle);
         grid.add(vbActionTarget, 0, 2, 1, 1);
 
-        //create hexString
-        int i, j, line = 0;
+        //create hexDumpString
+        int i, j, k, line = 0;
         String s = new String(hexByte(line, 4)) + ": ";
         String temp;
         String dataString = new String(data);
-        String plainText;
 
         for (i = 0; i < dataString.length(); i++) {
             temp = new String(hexByte(data[i], 2));
@@ -116,13 +119,7 @@ public class HexDumpPanel extends Application {
                 line++;
                 temp = new String(hexByte(line, 4));
 
-                plainText = "";
-
-                for (j = (i-15); j <= i; j++) {
-                    plainText = plainText + new String(hexByte(data[j], 1));
-                }
-
-                s = s + "\t\t" + plainText + "\n" + temp + ": ";
+                s = s + "\t\t" + plainText[i] + "\n" + temp + ": ";
             } else if ((i + 1) % 4 == 0 && (i + 1) != dataString.length()) {
                 s = s + " | ";
             } else {
