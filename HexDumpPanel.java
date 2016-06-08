@@ -15,6 +15,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.io.*;
 import java.util.List;
 
 /**
@@ -22,6 +23,15 @@ import java.util.List;
  */
 public class HexDumpPanel extends Application {
     public static void main(String[] args) {
+
+        //create new URLLoad object, pass the parameters and set the content of the textfile from args[2]
+        URLLoad urlObject = new URLLoad();
+        urlObject.setFileText(args[0], args[1]);
+
+        //create new URLConnectionLoad object, pass parameters and set the content of the textfile from args[2]
+        URLConnectionLoad urlsConnectionObject = new URLConnectionLoad();
+        urlsConnectionObject.setFileText(args[0], args[1]);
+
         Application.launch(args);
     }
 
@@ -35,8 +45,31 @@ public class HexDumpPanel extends Application {
         List<String> rawParameters = parameters.getRaw();
         String [] parameterArray = rawParameters.toArray(new String[rawParameters.size()]);
 
-        //pass bytes from parameters to data
-        data = parameterArray[0].getBytes();
+        if(parameterArray.length == 1){
+            //pass bytes from parameters to data if 1 parameter is present
+            data = parameterArray[0].getBytes();
+        }
+        else if(parameterArray.length == 2){
+            //pass bytes from file to data if exactly 2 parameters are present with 0 being the URL and 1 being the destination file
+            try
+            {
+                InputStream inputFile = new FileInputStream(parameterArray[1]);
+                ByteArrayOutputStream bos=new ByteArrayOutputStream(1024);
+                byte buf[]=new byte[1024];
+                int lenr;
+
+                while ((lenr=inputFile.read(buf))>-1) bos.write(buf,0,lenr);
+
+                data=bos.toByteArray();
+            }
+            catch(Exception e) {
+                System.out.println(e);
+            }
+        }
+        else{
+            System.err.println("Incorrect parameter count!\n\n1 for direct parameter to HexDump\n2 for URL to HexDump");
+            System.exit(1);
+        }
 
         //set the stage
         primaryStage.setTitle("HexDump");
@@ -87,7 +120,7 @@ public class HexDumpPanel extends Application {
             }
         }
 
-        //test output
+        //set final variable for inner method below
         final String hexDumpString = s;
 
         //events
@@ -96,11 +129,10 @@ public class HexDumpPanel extends Application {
             public void handle(ActionEvent event) {
                 actionTarget.setFill(Color.CRIMSON);
                 actionTarget.setText(hexDumpString);
-
             }
         });
 
-        Scene scene = new Scene(grid, 300, 250);
+        Scene scene = new Scene(grid, 600, 300);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -116,35 +148,4 @@ public class HexDumpPanel extends Application {
         }
         return x;
     }
-
-    /*
-    public void getHexString() {
-        int i, j, line = 0;
-        String s = new String(hexByte(line, 4)) + ": ";
-        String temp;
-        String plainText;
-
-        String dataString = new String(data);
-
-        for (i = 0; i < dataString.length(); i++) {
-            temp = new String(hexByte(data[i], 2));
-            s = s + temp;
-
-            if ((i + 1) % 16 == 0 && (i + 1) != dataString.length()) {
-                line++;
-                temp = new String(hexByte(line, 4));
-                plainText = "";
-
-                for (j = (i - 15); j <= i; j++) {
-                    plainText = plainText + new String(hexByte(data[j], 1));
-                }
-
-                s = s + "\t\t" + plainText + "\n" + temp + ": ";
-            } else if ((i + 1) % 4 == 0 && (i + 1) != dataString.length()) {
-                s = s + " | ";
-            } else {
-                s = s + " ";
-            }
-        }
-    }*/
 }
