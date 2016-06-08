@@ -22,6 +22,7 @@ import java.util.List;
 public class HexDumpPanel extends Application {
     public static void main(String[] args) {
         Application.launch(args);
+        //test-url: http://www.informatik.htw-dresden.de/~beck/PSPII_WI/praktika/java08.html
     }
 
     byte data[];
@@ -56,7 +57,7 @@ public class HexDumpPanel extends Application {
             }
         }
         else{
-            System.err.println("Incorrect parameter count!\n\n1 for direct parameter to HexDump\n2 for URL to HexDump");
+            System.err.println("Incorrect parameter count!\n\n1 for direct parameter to HexDump\n2 for URL to HexDump\n3 for UserInput to HexDump via Socket and EchoServer");
             System.exit(1);
         }
 
@@ -101,10 +102,11 @@ public class HexDumpPanel extends Application {
         grid.add(vbActionTarget, 0, 2, 1, 1);
 
         //create hexString
-        int i, line = 0;
-        String s = new String(hexByte(line, 4)) + ":\t";
+        int i, j, line = 0;
+        String s = new String(hexByte(line, 4)) + ": ";
         String temp;
         String dataString = new String(data);
+        String plainText;
 
         for (i = 0; i < dataString.length(); i++) {
             temp = new String(hexByte(data[i], 2));
@@ -113,7 +115,14 @@ public class HexDumpPanel extends Application {
             if ((i + 1) % 16 == 0 && (i + 1) != dataString.length()) {
                 line++;
                 temp = new String(hexByte(line, 4));
-                s = s + "\n" + temp + ":\t";
+
+                plainText = "";
+
+                for (j = (i-15); j <= i; j++) {
+                    plainText = plainText + new String(hexByte(data[j], 1));
+                }
+
+                s = s + "\t\t" + plainText + "\n" + temp + ": ";
             } else if ((i + 1) % 4 == 0 && (i + 1) != dataString.length()) {
                 s = s + " | ";
             } else {
@@ -150,8 +159,12 @@ public class HexDumpPanel extends Application {
         buttonSocket.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                System.out.println("Type text to convert to HexDump!");
+
                 SocketLoad socketObject = new SocketLoad();
                 socketObject.setFileText(parameterArray[0], parameterArray[1], parameterArray[2]);
+
+                System.out.println("Creating HexDump.");
 
                 hexDumpTitle.setText("HexDump via Socket");
 

@@ -29,7 +29,7 @@ public class SocketLoad {
             printWriter.println(in.readLine());
             printWriter.close();
 
-            System.out.println("TextFile has been set");
+            System.out.println("TextFile has been set.");
 
         } catch (UnknownHostException e) {
             System.err.println("Don't know about host " + hostName);
