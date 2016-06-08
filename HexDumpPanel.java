@@ -22,15 +22,14 @@ import java.util.List;
 public class HexDumpPanel extends Application {
     public static void main(String[] args) {
         //create new URLLoad object, pass the parameters and set the content of the textfile from args[2]
-        URLLoad urlObject = new URLLoad();
-        urlObject.setFileText(args[0], args[1]);
+        //URLLoad urlObject = new URLLoad();
+        //urlObject.setFileText(args[0], args[1]);
 
         //create new URLConnectionLoadButton object, pass parameters and set the content of the textfile from args[2]
-        URLConnectionLoad urlsConnectionObject = new URLConnectionLoad();
-        urlsConnectionObject.setFileText(args[0], args[1]);
+        //URLConnectionLoad urlsConnectionObject = new URLConnectionLoad();
+        //urlsConnectionObject.setFileText(args[0], args[1]);
 
         //create new SocketLoadButton object, pass the parameters and set the content of the textfile from args[2]
-
 
         Application.launch(args);
     }
@@ -105,11 +104,10 @@ public class HexDumpPanel extends Application {
 
         //set up output box
         final Text hexDumpTitle = new Text();
-        final Text hexDumpTarget = new Text();
+        hexDumpTitle.setFill(Color.CRIMSON);
         VBox vbActionTarget = new VBox();
-        vbActionTarget.setSpacing(10);
         vbActionTarget.setAlignment(Pos.BASELINE_CENTER);
-        vbActionTarget.getChildren().addAll(hexDumpTitle, hexDumpTarget);
+        vbActionTarget.getChildren().add(hexDumpTitle);
         grid.add(vbActionTarget, 0, 2, 1, 1);
 
         //create hexString
@@ -127,9 +125,9 @@ public class HexDumpPanel extends Application {
                 temp = new String(hexByte(line, 4));
                 s = s + "\n" + temp + ":\t";
             } else if ((i + 1) % 4 == 0 && (i + 1) != dataString.length()) {
-                s = s + "\t  |\t";
+                s = s + " | ";
             } else {
-                s = s + "\t";
+                s = s + " ";
             }
         }
 
@@ -140,35 +138,36 @@ public class HexDumpPanel extends Application {
         buttonUrl.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                hexDumpTitle.setFill(Color.CRIMSON);
+                URLLoad urlObject = new URLLoad();
+                urlObject.setFileText(parameterArray[0], parameterArray[1]);
+
                 hexDumpTitle.setText("HexDump via URL-object");
 
-                hexDumpTarget.setFill(Color.CRIMSON);
-                hexDumpTarget.setText(hexDumpString);
+                System.out.println(hexDumpString);
             }
         });
         buttonUrlConnection.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                hexDumpTitle.setFill(Color.CRIMSON);
+                URLConnectionLoad urlsConnectionObject = new URLConnectionLoad();
+                urlsConnectionObject.setFileText(parameterArray[0], parameterArray[1]);
+
                 hexDumpTitle.setText("HexDump via URLConnection-object");
 
-                hexDumpTarget.setFill(Color.CRIMSON);
-                hexDumpTarget.setText(hexDumpString);
+                System.out.println(hexDumpString);
             }
         });
         buttonSocket.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                hexDumpTitle.setFill(Color.CRIMSON);
+
                 hexDumpTitle.setText("HexDump via Socket");
 
-                hexDumpTarget.setFill(Color.CRIMSON);
-                hexDumpTarget.setText(hexDumpString);
+                System.out.println(hexDumpString);
             }
         });
 
-        Scene scene = new Scene(grid, 600, 300);
+        Scene scene = new Scene(grid, 400, 250);
         primaryStage.setScene(scene);
         primaryStage.show();
     }

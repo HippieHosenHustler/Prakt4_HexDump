@@ -8,7 +8,7 @@ public class URLLoad {
     public void setFileText(String urlParameter, String fileParameter){
         try{
             URL url = new URL(urlParameter);
-            OutputStream outputStream = new FileOutputStream(fileParameter + "URLFile.txt");
+            OutputStream outputStream = new FileOutputStream(fileParameter);
             InputStream inputStream = url.openStream();
 
             int length;

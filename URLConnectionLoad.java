@@ -13,7 +13,7 @@ public class URLConnectionLoad {
             URL url = new URL(urlParameter);
             URLConnection connection = url.openConnection();
             connection.connect();
-            OutputStream outputStream = new FileOutputStream(fileParameter + "URLConnectionFile.txt");
+            OutputStream outputStream = new FileOutputStream(fileParameter);
             InputStream inputStream = connection.getInputStream();
 
             int length;
