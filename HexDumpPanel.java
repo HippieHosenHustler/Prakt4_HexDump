@@ -79,33 +79,44 @@ public class HexDumpPanel extends Application {
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
-        grid.setVgap(15);
+        grid.setVgap(20);
         grid.setPadding(new Insets(25, 25, 25, 25));
 
         //content of the panel
+        //set up title
         Text sceneTitle = new Text("What type of input?");
         sceneTitle.setFont(Font.font("Arial", FontWeight.NORMAL, 20));
-        grid.add(sceneTitle, 0, 0, 1, 1);
+        VBox vbTitle = new VBox();
+        vbTitle.setAlignment(Pos.BASELINE_CENTER);
+        vbTitle.getChildren().add(sceneTitle);
+        grid.add(vbTitle, 0, 0, 1, 1);
 
+        //set up buttons
         Button buttonUrl = new Button("URL");
         Button buttonUrlConnection = new Button("URLConnection");
         Button buttonSocket = new Button("Socket");
 
-        buttonUrl.setMaxWidth(Double.MAX_VALUE);
-        buttonUrlConnection.setMaxWidth(Double.MAX_VALUE);
-        buttonSocket.setMaxWidth(Double.MAX_VALUE);
+        buttonUrl.setMaxWidth(100);
+        buttonUrlConnection.setMaxWidth(100);
+        buttonSocket.setMaxWidth(100);
 
         VBox vbButtons = new VBox();
+        vbButtons.setSpacing(5);
         vbButtons.setAlignment(Pos.BASELINE_CENTER);
-        vbButtons.setSpacing(10);
         vbButtons.getChildren().addAll(buttonUrl, buttonUrlConnection, buttonSocket);
         grid.add(vbButtons, 0, 1, 1, 1);
 
-        final Text actionTarget = new Text();
-        grid.add(actionTarget, 0, 4, 2, 1);
+        //set up output box
+        final Text hexDumpTitle = new Text();
+        final Text hexDumpTarget = new Text();
+        VBox vbActionTarget = new VBox();
+        vbActionTarget.setSpacing(10);
+        vbActionTarget.setAlignment(Pos.BASELINE_CENTER);
+        vbActionTarget.getChildren().addAll(hexDumpTitle, hexDumpTarget);
+        grid.add(vbActionTarget, 0, 2, 1, 1);
 
         //create hexString
-        int i, j, line = 0;
+        int i, line = 0;
         String s = new String(hexByte(line, 4)) + ":\t";
         String temp;
         String dataString = new String(data);
@@ -132,8 +143,31 @@ public class HexDumpPanel extends Application {
         buttonUrl.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                actionTarget.setFill(Color.CRIMSON);
-                actionTarget.setText(hexDumpString);
+                hexDumpTitle.setFill(Color.CRIMSON);
+                hexDumpTitle.setText("HexDump via URL-object");
+
+                hexDumpTarget.setFill(Color.CRIMSON);
+                hexDumpTarget.setText(hexDumpString);
+            }
+        });
+        buttonUrlConnection.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                hexDumpTitle.setFill(Color.CRIMSON);
+                hexDumpTitle.setText("HexDump via URLConnection-object");
+
+                hexDumpTarget.setFill(Color.CRIMSON);
+                hexDumpTarget.setText(hexDumpString);
+            }
+        });
+        buttonSocket.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                hexDumpTitle.setFill(Color.CRIMSON);
+                hexDumpTitle.setText("HexDump via Socket");
+
+                hexDumpTarget.setFill(Color.CRIMSON);
+                hexDumpTarget.setText(hexDumpString);
             }
         });
 
