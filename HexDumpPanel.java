@@ -21,7 +21,13 @@ import java.util.List;
  */
 public class HexDumpPanel extends Application {
     public static void main(String[] args) {
+    if(args.length == 2 || args.length == 3) {
         Application.launch(args);
+    }
+    else{
+        System.err.println("Incorrect parameter count!\n\n2 for URL to HexDump\n3 for UserInput to HexDump via Socket and EchoServer");
+        System.exit(1);
+    }
         //test-url: http://www.informatik.htw-dresden.de/~beck/PSPII_WI/praktika/java08.html
     }
 
@@ -34,36 +40,6 @@ public class HexDumpPanel extends Application {
         Parameters parameters = getParameters();
         List<String> rawParameters = parameters.getRaw();
         String [] parameterArray = rawParameters.toArray(new String[rawParameters.size()]);
-
-        if(parameterArray.length == 1){
-            //pass bytes from parameters to data if 1 parameter is present
-            data = parameterArray[0].getBytes();
-            char[] plainText = new char[parameterArray[0].length()];
-        }
-        else if(parameterArray.length == 2 || parameterArray.length == 3){
-            //pass bytes from file to data if exactly 2 parameters are present with 0 being the URL and 1 being the destination file
-            try
-            {
-                InputStream inputFile = new FileInputStream(parameterArray[1]);
-                ByteArrayOutputStream bos=new ByteArrayOutputStream(1024);
-                byte buf[]=new byte[1024];
-                int lenr;
-
-                while ((lenr=inputFile.read(buf))>-1) bos.write(buf,0,lenr);
-
-                data=bos.toByteArray();
-
-                BufferedReader reader = new BufferedReader(new FileReader(parameterArray[1]));
-                //char[] plainText = new char[length of string from file goes here];
-            }
-            catch(Exception e) {
-                System.out.println(e);
-            }
-        }
-        else{
-            System.err.println("Incorrect parameter count!\n\n1 for direct parameter to HexDump\n2 for URL to HexDump\n3 for UserInput to HexDump via Socket and EchoServer");
-            System.exit(1);
-        }
 
         //set the stage
         primaryStage.setTitle("HexDump");
@@ -86,15 +62,17 @@ public class HexDumpPanel extends Application {
         Button buttonUrl = new Button("URL");
         Button buttonUrlConnection = new Button("URLConnection");
         Button buttonSocket = new Button("Socket");
+        Button buttonGenerate = new Button("Generate");
 
         buttonUrl.setMaxWidth(100);
         buttonUrlConnection.setMaxWidth(100);
         buttonSocket.setMaxWidth(100);
+        buttonGenerate.setMaxWidth(100);
 
         VBox vbButtons = new VBox();
         vbButtons.setSpacing(5);
         vbButtons.setAlignment(Pos.BASELINE_CENTER);
-        vbButtons.getChildren().addAll(buttonUrl, buttonUrlConnection, buttonSocket);
+        vbButtons.getChildren().addAll(buttonUrl, buttonUrlConnection, buttonSocket, buttonGenerate);
         grid.add(vbButtons, 0, 1, 1, 1);
 
         //set up output box
@@ -105,8 +83,57 @@ public class HexDumpPanel extends Application {
         vbActionTarget.getChildren().add(hexDumpTitle);
         grid.add(vbActionTarget, 0, 2, 1, 1);
 
+        //events
+        buttonUrl.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                URLLoad urlObject = new URLLoad();
+                urlObject.setFileText(parameterArray[0], parameterArray[1]);
+                System.out.println("TextFile set.");
+            }
+        });
+        buttonUrlConnection.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                URLConnectionLoad urlsConnectionObject = new URLConnectionLoad();
+                urlsConnectionObject.setFileText(parameterArray[0], parameterArray[1]);
+                System.out.println("TextFile set.");
+            }
+        });
+        buttonSocket.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                System.out.println("Type text to convert to HexDump!");
+
+                SocketLoad socketObject = new SocketLoad();
+                socketObject.setFileText(parameterArray[0], parameterArray[1], parameterArray[2]);
+                System.out.println("TextFile set.");
+            }
+        });
+
+
+            //pass bytes from file to data if exactly 2 parameters are present with 0 being the URL and 1 being the destination file
+            try
+            {
+                InputStream inputFile = new FileInputStream(parameterArray[1]);
+                ByteArrayOutputStream bos=new ByteArrayOutputStream(1024);
+                byte buf[]=new byte[1024];
+                int lenr;
+
+                while ((lenr=inputFile.read(buf))>-1) bos.write(buf,0,lenr);
+
+                data=bos.toByteArray();
+
+                //BufferedReader reader = new BufferedReader(new FileReader(parameterArray[1]));
+                //char[] plainText = new char[length of string from file goes here];
+            }
+            catch(Exception e) {
+                System.out.println(e);
+            }
+
+
         //create hexDumpString
-        int i, j, k, line = 0;
+        int i, line = 0;
         String s = new String(hexByte(line, 4)) + ": ";
         String temp;
         String dataString = new String(data);
@@ -119,7 +146,7 @@ public class HexDumpPanel extends Application {
                 line++;
                 temp = new String(hexByte(line, 4));
 
-                s = s + "\t\t" + plainText[i] + "\n" + temp + ": ";
+                s = s + /*"\t\t" + plainText[i] + */"\n" + temp + ": ";
             } else if ((i + 1) % 4 == 0 && (i + 1) != dataString.length()) {
                 s = s + " | ";
             } else {
@@ -130,41 +157,11 @@ public class HexDumpPanel extends Application {
         //set final variable for inner method below
         final String hexDumpString = s;
 
-        //events
-        buttonUrl.setOnAction(new EventHandler<ActionEvent>() {
+        buttonGenerate.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                URLLoad urlObject = new URLLoad();
-                urlObject.setFileText(parameterArray[0], parameterArray[1]);
-
-                hexDumpTitle.setText("HexDump via URL-object");
-
-                System.out.println(hexDumpString);
-            }
-        });
-        buttonUrlConnection.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                URLConnectionLoad urlsConnectionObject = new URLConnectionLoad();
-                urlsConnectionObject.setFileText(parameterArray[0], parameterArray[1]);
-
-                hexDumpTitle.setText("HexDump via URLConnection-object");
-
-                System.out.println(hexDumpString);
-            }
-        });
-        buttonSocket.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                System.out.println("Type text to convert to HexDump!");
-
-                SocketLoad socketObject = new SocketLoad();
-                socketObject.setFileText(parameterArray[0], parameterArray[1], parameterArray[2]);
-
-                System.out.println("Creating HexDump.");
-
-                hexDumpTitle.setText("HexDump via Socket");
-
+                hexDumpTitle.setFill(Color.CRIMSON);
+                hexDumpTitle.setText("generating HexDump in console");
                 System.out.println(hexDumpString);
             }
         });
